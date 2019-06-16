@@ -1,20 +1,17 @@
 #' @export
 
 plotLearnerPrediction = function(learner, task, features = NULL, cv = 10L, err.mark = "train",
-  pointsize = 2, err.size = pointsize, err.col = "white",
+  pointsize = 2, err.size = pointsize, err.col = "white", prob.alpha = TRUE,
   gridsize = 100L) {
 
+  task = assert_task(task, clone = TRUE)
+  learner = assert_learner(learner, task = task, clone = TRUE)
   checkmate::assertChoice(err.mark, choices = c("train", "cv", "none"))
 
   fns = task$feature_names
   if (is.null(features)) {
-    features = if (length(fns) == 1L) {
-      fns
-    } else {
-      fns[1:2]
-    }
+    features = if(length(fns) == 1L) fns else fns[1:2]
   }
-  #  print(features)
   target = task$target_names
 
   # subset to features
@@ -40,12 +37,18 @@ plotLearnerPrediction = function(learner, task, features = NULL, cv = 10L, err.m
   }
   colnames(grid) = features
 
+  # prob
+  if ("prob" %in% learner$predict_types) {
+    learner$predict_type = "prob"
+  }
+
   # add predictions to data
   e = Experiment$new(task = task, learner = learner)
   e$train()
   e$predict()
   predictions = e$prediction
   dataForPlot = cbind(data, truth = predictions$truth)
+  colnames(dataForPlot)[ncol(dataForPlot)] = target
 
   if (err.mark == "train") {
     dataForPlot$response = predictions$response
@@ -65,7 +68,7 @@ plotLearnerPrediction = function(learner, task, features = NULL, cv = 10L, err.m
       perf.cv = NA_real_
     }
   }
-  dataForPlot$.err = dataForPlot$response != dataForPlot$truth
+  dataForPlot$.err = dataForPlot$response != dataForPlot[[target]]
 
   # grid for predictions
   grid = cbind(grid, levels(task$truth())[1])
@@ -77,29 +80,37 @@ plotLearnerPrediction = function(learner, task, features = NULL, cv = 10L, err.m
   x2n = features[2]
   #  p=ggplot(dataForPlot,aes_string(x = x1n, y = x2n, col = "response"))+geom_point()
 
-  # plot grid
   p = ggplot(grid, aes_string(x = x1n, y = x2n))
-  p = p + geom_raster(mapping = aes_string(fill = target))
+  # plot grid
+  if (learner$predict_type == "prob" && prob.alpha) { #
+    prob = apply(pred.grid$prediction$prob, 1, max)
+    grid$.prob.pred.class = prob
+    p = p + geom_raster(data = grid, mapping = aes_string(fill = target, alpha = ".prob.pred.class"),
+      show.legend = TRUE) + scale_fill_discrete(drop = FALSE)
+    p = p + scale_alpha(limits = range(grid$.prob.pred.class))
+  } else { # Reponse only
+    p = p + geom_raster(mapping = aes_string(fill = target))
+  }
 
   ## plot correct points
   p = p + geom_point(data = subset(dataForPlot, !dataForPlot$.err),
-    mapping = aes_string(x = x1n, y = x2n, shape = "truth"), size = pointsize)
+    mapping = aes_string(x = x1n, y = x2n, shape = target), size = pointsize)
   #  p = ggplot(data = subset(dataForPlot, !dataForPlot$.err),
   #             mapping = aes_string(x = x1n, y = x2n, shape = "truth"), size = pointsize)+geom_point()
 
   # plot error mark on error points
   if (err.mark != "none" && any(dataForPlot$.err)) {
     p = p + geom_point(data = subset(dataForPlot, dataForPlot$.err),
-      mapping = aes_string(x = x1n, y = x2n, shape = "truth"),
+      mapping = aes_string(x = x1n, y = x2n, shape = target),
       size = err.size + 1.5, show.legend = FALSE)
     p = p + geom_point(data = subset(dataForPlot, dataForPlot$.err),
-      mapping = aes_string(x = x1n, y = x2n, shape = "truth"),
+      mapping = aes_string(x = x1n, y = x2n, shape = target),
       size = err.size + 1, col = err.col, show.legend = FALSE)
   }
 
   # plot error points
   p = p + geom_point(data = subset(dataForPlot, dataForPlot$.err),
-    mapping = aes_string(x = x1n, y = x2n, shape = "truth"),  size = err.size, show.legend = FALSE)
+    mapping = aes_string(x = x1n, y = x2n, shape = target),  size = err.size, show.legend = FALSE)
   p = p + guides(alpha = FALSE)
   return(p)
 

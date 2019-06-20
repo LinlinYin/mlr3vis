@@ -2,7 +2,6 @@
 
 export(generateThreshVsPerfData)
 export(plotBMRBoxplots)
-export(plotBMRBoxplotsMore)
 export(plotBMRRanksAsBarChart)
 export(plotLearnerPrediction)
 export(plotROCCurves)

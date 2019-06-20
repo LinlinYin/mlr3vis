@@ -82,19 +82,13 @@ bmr = benchmark(design)
 ```{r}
 
 plotBMRBoxplots(bmr)
-plotBMRBoxplots(bmr,style = "violin")
+#Different facet and violin plot
+plotBMRBoxplots(bmr,style = "violin",xVar="task_id",facet_x="measure",facet_y="learner_id")
+#Dot plot
 plotBMRBoxplots(bmr,style = "dot")
 
 ```
 
-### plotBMRBoxplotsMore: Better figure than plotBMRBoxplots?
-```{r}
-
-plotBMRBoxplotsMore(bmr)
-plotBMRBoxplotsMore(bmr,style = "violin")
-plotBMRBoxplotsMore(bmr,style = "dot")
-
-```
 
 ### plotBMRRanksAsBarChart
 ```{r}

@@ -1,40 +1,22 @@
+#' @title Create box, violin or dot plots for a BenchmarkResult.
+#'
+#' @description
+#' Plots box, violin or dot plots for all `measure` across all iterations
+#' of the resampling strategy in all `learner_id`, faceted by the `task.id` and `measure`.
+#'
+#'
+#' @param bmr the BenchmarkResult object
+#' @param style Type of plot, can be \dQuote{box} for a boxplot, \dQuote{violin} for a violin plot,
+#'   or \dQuote{dot} for a dot plot. Default is \dQuote{box}.
+#' @param xVar variable for X axis, can be learner_id, task_id, measure
+#' @param facet_x variable for facetting in columns, can be learner_id, task_id, measure
+#' @param facet_y variable for facetting in rows, can be learner_id, task_id, measure
 #' @export
-plotBMRBoxplots = function(bmr, measure = bmr$measures$measure_id[1], style = "box") {
-
-  checkmate::assertChoice(style, c("box", "violin", "dot"))
-
-  bmrAgg = bmr$aggregated(objects = FALSE)
-  setkey(bmrAgg, "hash")
-  bmrAllUniqueHash = unique(bmrAgg$hash)
-
-  dataForPlot = NULL
-  for (i in 1:length(bmrAllUniqueHash)) {
-    rr = bmrAgg[bmrAllUniqueHash[i], resample_result][[1]]
-    #    rr = bmr$resample_result(bmrAllUniqueHash[i])
-    dataForPlotOne = cbind(as.data.table(rr)[, measure, with = FALSE, drop = FALSE], bmrAgg[i, c("task_id", "learner_id"), with = FALSE])
-    #    print(bmrAgg)
-    #    print(bmrAllUniqueHash[i])
-    #    print(bmrAgg[bmrAllUniqueHash[i],])
-    #    print(bmrAgg[i,])
-    #    print(dataForPlotOne)
-    dataForPlot = rbind(dataForPlot, dataForPlotOne)
-  }
-
-  #  return(dataForPlot)
-  p = ggplot(data = dataForPlot, aes_string(x = "learner_id", y = measure)) + facet_wrap(~task_id)
-  if (style == "box") {
-    p = p + geom_boxplot()
-  } else if (style == "violin") {
-    p = p + geom_violin()
-  } else {
-    p = p + geom_dotplot(binaxis = "y", stackdir = "center", position = "dodge")
-  }
-  return(p)
-}
-
-#' @export
-plotBMRBoxplotsMore = function(bmr, style = "box") {
-
+#' @examples
+plotBMRBoxplots = function(bmr, style = "box",xVar="learner_id",facet_x="task_id",facet_y="measure") {
+  checkmate::assertChoice(xVar, c("learner_id", "task_id", "measure"))
+  checkmate::assertChoice(facet_x, c("learner_id", "task_id", "measure"))
+  checkmate::assertChoice(facet_y, c("learner_id", "task_id", "measure"))
   checkmate::assertChoice(style, c("box", "violin", "dot"))
 
   measure = bmr$measures$measure_id
@@ -56,14 +38,15 @@ plotBMRBoxplotsMore = function(bmr, style = "box") {
   }
 
   dataForPlot = melt(dataForPlot, id.vars = setdiff(colnames(dataForPlot), measure))
-  p = ggplot(data = dataForPlot, aes_string(x = "task_id", y = "value")) + facet_wrap(~variable, scale = "free") + ylab("Measure")
+  colnames(dataForPlot)[3]="measure"
+  p = ggplot(data = dataForPlot, aes_string(x = xVar, y = "value")) + facet_grid((paste0(facet_y,"~",facet_x)), scale = "free")+ylab("Measure")
   if (style == "box") {
-    p = p + geom_boxplot(aes(fill = learner_id))
+    p = p + geom_boxplot()
   } else if (style == "violin") {
-    p = p + geom_violin(aes(fill = learner_id))
+    p = p + geom_violin()
   } else {
-    #    p=p+geom_dotplot(aes(fill=learner_id),binaxis = "y", stackdir = "center", position = "dodge",size=1)
-    p = p + geom_jitter(aes(colour = learner_id), position = position_dodge(width = 1))
+    p=p+geom_dotplot(binaxis = "y", stackdir = "center", position = "dodge",size=1)
+#    p = p + geom_jitter()
   }
   return(p)
 }

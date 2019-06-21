@@ -48,7 +48,7 @@ plotBMRBoxplots = function(bmr, style = "box",xVar="learner_id",facet_x="task_id
     p=p+geom_dotplot(binaxis = "y", stackdir = "center", position = "dodge",size=1)
 #    p = p + geom_jitter()
   }
-  return(p)
+  return(plotWithTheme(p))
 }
 
 
@@ -68,5 +68,6 @@ plotBMRRanksAsBarChart = function(bmr, pos = "tile") {
     p = ggplot(dataForPlot, aes_string("rank", fill = "learner_id"))
     p = p + geom_bar(position = pos)
   }
-  return(p)
+  return(plotWithTheme(p))
 }
+

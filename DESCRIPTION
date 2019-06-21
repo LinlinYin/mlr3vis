@@ -9,6 +9,7 @@ Description: More about what it does (maybe more than one line)
 License: What license is it under?
 Depends:
     ggplot2,
+    ggpubr,
     mlr3
 Encoding: UTF-8
 LazyData: true

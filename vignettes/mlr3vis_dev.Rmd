@@ -1,11 +1,22 @@
 ---
 title: "mlr3 vis development"
 author: "Linlin Yin"
-output: html_document
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  collapse = TRUE,
+  comment = "#>",
+  fig.width=7,
+  fig.height=7
+)
 ```
 
 # Test for visulization functions from mlr to mlr3
@@ -139,6 +150,4 @@ plotThreshVsPerf(performanceByThreshold)
 plotROCCurves(performanceByThreshold)
 
 ```
-
-
 

@@ -10,7 +10,7 @@ plotLearnerPrediction = function(learner, task, features = NULL, cv = 10L, err.m
 
   fns = task$feature_names
   if (is.null(features)) {
-    features = if(length(fns) == 1L) fns else fns[1:2]
+    features = if (length(fns) == 1L) fns else fns[1:2]
   }
   target = task$target_names
 
@@ -152,17 +152,17 @@ plotLearnerPrediction = function(learner, task, features = NULL, cv = 10L, err.m
 #' @export
 
 plotLearnerPredictionExperiment = function(e, features = NULL, err.mark = "train",
-                                 pointsize = 2, err.size = pointsize, err.col = "white", prob.alpha = TRUE,
-                                 gridsize = 100L) {
+  pointsize = 2, err.size = pointsize, err.col = "white", prob.alpha = TRUE,
+  gridsize = 100L) {
 
   target = e$task$target_names
-  predictionResult=as.data.table(e$prediction)
+  predictionResult = as.data.table(e$prediction)
   predictionResult$.err = predictionResult$response != predictionResult$truth
   colnames(predictionResult)[2] = target
 
   fns = e$task$feature_names
   if (is.null(features)) {
-    features = if(length(fns) == 1L) fns else fns[1:2]
+    features = if (length(fns) == 1L) fns else fns[1:2]
   }
   dataForPlot = e$task$data()[, features, with = FALSE]
 
@@ -196,33 +196,30 @@ plotLearnerPredictionExperiment = function(e, features = NULL, err.mark = "train
 
 
 
-  dataForPlot=cbind(dataForPlot,predictionResult)
+  dataForPlot = cbind(dataForPlot, predictionResult)
 
   p = ggplot(grid, aes_string(x = x1n, y = x2n))
 
   ## plot correct points
   p = p + geom_point(data = subset(dataForPlot, !dataForPlot$.err),
-                     mapping = aes_string(x = x1n, y = x2n, shape = target), size = pointsize)
+    mapping = aes_string(x = x1n, y = x2n, shape = target), size = pointsize)
   #  p = ggplot(data = subset(dataForPlot, !dataForPlot$.err),
   #             mapping = aes_string(x = x1n, y = x2n, shape = "truth"), size = pointsize)+geom_point()
 
   # plot error mark on error points
   if (err.mark != "none" && any(dataForPlot$.err)) {
     p = p + geom_point(data = subset(dataForPlot, dataForPlot$.err),
-                       mapping = aes_string(x = x1n, y = x2n, shape = target),
-                       size = err.size + 1.5, show.legend = FALSE)
+      mapping = aes_string(x = x1n, y = x2n, shape = target),
+      size = err.size + 1.5, show.legend = FALSE)
     p = p + geom_point(data = subset(dataForPlot, dataForPlot$.err),
-                       mapping = aes_string(x = x1n, y = x2n, shape = target),
-                       size = err.size + 1, col = err.col, show.legend = FALSE)
+      mapping = aes_string(x = x1n, y = x2n, shape = target),
+      size = err.size + 1, col = err.col, show.legend = FALSE)
   }
 
   # plot error points
   p = p + geom_point(data = subset(dataForPlot, dataForPlot$.err),
-                     mapping = aes_string(x = x1n, y = x2n, shape = target),  size = err.size, show.legend = FALSE)
+    mapping = aes_string(x = x1n, y = x2n, shape = target),  size = err.size, show.legend = FALSE)
   p = p + guides(alpha = FALSE)
   return(p)
 
 }
-
-
-

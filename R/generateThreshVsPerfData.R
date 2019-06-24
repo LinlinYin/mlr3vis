@@ -1,4 +1,13 @@
+#' @title Generate threshold vs. performance(s) for 2-class classification.
+#'
+#' @description
+#' Generates data on threshold vs. performance(s) for 2-class classification that can be used for plotting.
+#'
+#'
+#' @param e Container object for a machine learning experiment.
+#' @param gridsize Grid resolution for x-axis (threshold). Default is 100.
 #' @export
+#' @examples
 generateThreshVsPerfData = function(e, gridsize = 100L) {
   eClone = e$clone()
 

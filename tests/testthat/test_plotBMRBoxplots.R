@@ -7,16 +7,27 @@ test_that("plotBMRBoxplots range includes all outliers", {
   design = expand_grid(tasks, learners, resamplings)
   bmr = benchmark(design)
 
-  p=ggplot_build(plotBMRBoxplots(bmr))
+  p = ggplot_build(plotBMRBoxplots(bmr))
 
   figureYRange <- p$layout$panel_params[[1]]$y.range
-  dataPerformanceRange=range(unlist(bmr$data$performance))
+  dataPerformanceRange = range(unlist(bmr$data$performance))
 
   expect_true(figureYRange[1] <= dataPerformanceRange[1])
   expect_true(figureYRange[2] >= dataPerformanceRange[2])
 })
 
 
+test_that("plotBMRBoxplots one example contains six boxplot", {
+  tasks = mlr_tasks$mget(c("pima", "sonar", "spam"))
+  learners = mlr_learners$mget(c("classif.featureless", "classif.rpart"))
+  resamplings = mlr_resamplings$mget("cv")
+  design = expand_grid(tasks, learners, resamplings)
+  bmr = benchmark(design)
 
+  p = plotBMRBoxplots(bmr)
+  pLayerData <- layer_data(p)
+
+  expect_true(nrow(pLayerData) ==6)
+})
 
 

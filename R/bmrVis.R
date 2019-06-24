@@ -9,14 +9,19 @@
 #' @param style Type of plot, can be \dQuote{box} for a boxplot, \dQuote{violin} for a violin plot,
 #'   or \dQuote{dot} for a dot plot. Default is \dQuote{box}.
 #' @param xVar variable for X axis, can be learner_id, task_id, measure
-#' @param facet_x variable for facetting in columns, can be learner_id, task_id, measure
-#' @param facet_y variable for facetting in rows, can be learner_id, task_id, measure
+#' @param facet_x variable for facetting in columns, can be learner_id, task_id, measure, or NULL
+#' @param facet_y variable for facetting in rows, can be learner_id, task_id, measure, or NULL
 #' @export
 #' @examples
-plotBMRBoxplots = function(bmr, style = "box",xVar="learner_id",facet_x="task_id",facet_y="measure") {
+plotBMRBoxplots = function(bmr, style = "box", xVar = "learner_id", facet_x = "task_id", facet_y = "measure") {
+
   checkmate::assertChoice(xVar, c("learner_id", "task_id", "measure"))
-  checkmate::assertChoice(facet_x, c("learner_id", "task_id", "measure"))
-  checkmate::assertChoice(facet_y, c("learner_id", "task_id", "measure"))
+  if (!is.null(facet_x)) {
+    checkmate::assertChoice(facet_x, c("learner_id", "task_id", "measure"))
+  }
+  if (!is.null(facet_y)) {
+    checkmate::assertChoice(facet_y, c("learner_id", "task_id", "measure"))
+  }
   checkmate::assertChoice(style, c("box", "violin", "dot"))
 
   measure = bmr$measures$measure_id
@@ -38,15 +43,15 @@ plotBMRBoxplots = function(bmr, style = "box",xVar="learner_id",facet_x="task_id
   }
 
   dataForPlot = melt(dataForPlot, id.vars = setdiff(colnames(dataForPlot), measure))
-  colnames(dataForPlot)[3]="measure"
-  p = ggplot(data = dataForPlot, aes_string(x = xVar, y = "value")) + facet_grid((paste0(facet_y,"~",facet_x)), scale = "free")+ylab("Measure")
+  colnames(dataForPlot)[3] = "measure"
+  p = ggplot(data = dataForPlot, aes_string(x = xVar, y = "value")) + facet_grid((paste0(facet_y, "~", facet_x)), scale = "free") + ylab("Measure")
   if (style == "box") {
     p = p + geom_boxplot()
   } else if (style == "violin") {
     p = p + geom_violin()
   } else {
-    p=p+geom_dotplot(binaxis = "y", stackdir = "center", position = "dodge",size=1)
-#    p = p + geom_jitter()
+    p = p + geom_dotplot(binaxis = "y", stackdir = "center", position = "dodge", size = 1)
+    #    p = p + geom_jitter()
   }
   return(plotWithTheme(p))
 }
@@ -70,4 +75,3 @@ plotBMRRanksAsBarChart = function(bmr, pos = "tile") {
   }
   return(plotWithTheme(p))
 }
-

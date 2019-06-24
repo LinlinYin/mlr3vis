@@ -15,9 +15,9 @@ or \dQuote{dot} for a dot plot. Default is \dQuote{box}.}
 
 \item{xVar}{variable for X axis, can be learner_id, task_id, measure}
 
-\item{facet_x}{variable for facetting in columns, can be learner_id, task_id, measure}
+\item{facet_x}{variable for facetting in columns, can be learner_id, task_id, measure, or NULL}
 
-\item{facet_y}{variable for facetting in rows, can be learner_id, task_id, measure}
+\item{facet_y}{variable for facetting in rows, can be learner_id, task_id, measure, or NULL}
 }
 \description{
 Plots box, violin or dot plots for all `measure` across all iterations

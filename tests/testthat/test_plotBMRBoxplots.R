@@ -27,7 +27,5 @@ test_that("plotBMRBoxplots one example contains six boxplot", {
   p = plotBMRBoxplots(bmr)
   pLayerData <- layer_data(p)
 
-  expect_true(nrow(pLayerData) ==6)
+  expect_true(nrow(pLayerData) == 6)
 })
-
-

@@ -67,6 +67,26 @@ plotLearnerPredictionExperiment(e)
 
 ```
 
+## summaryFeatureByPrediction based on Experiment
+```{r,results='asis'}
+
+summaryFeatureByPrediction(e,groupVar="truth")
+
+summaryFeatureByPrediction(e,groupVar="response")
+
+```
+
+
+## plotFeatureByPrediction based on Experiment
+```{r}
+
+plotFeatureByPrediction(e,groupVar="truth")
+
+plotFeatureByPrediction(e,groupVar="response",style = "dot")
+
+```
+
+
 
 
 ## benchmark related

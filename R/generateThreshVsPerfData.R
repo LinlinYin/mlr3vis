@@ -8,6 +8,7 @@
 #' @param gridsize Grid resolution for x-axis (threshold). Default is 100.
 #' @export
 #' @examples
+#' 1
 generateThreshVsPerfData = function(e, gridsize = 100L) {
   eClone = e$clone()
 

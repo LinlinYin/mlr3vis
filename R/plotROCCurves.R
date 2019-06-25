@@ -6,5 +6,5 @@ plotROCCurves = function(performanceByThreshold) {
   } else {
     stop(paste0("Can't find classif.fpr and classif.tpr in performanceByThreshold data"))
   }
-  return(p)
+  return(plotWithTheme(p))
 }

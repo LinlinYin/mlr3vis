@@ -13,6 +13,7 @@
 #' @param facet_y variable for facetting in rows, can be learner_id, task_id, measure, or NULL
 #' @export
 #' @examples
+#' 1
 plotBMRBoxplots = function(bmr, style = "box", xVar = "learner_id", facet_x = "task_id", facet_y = "measure") {
 
   checkmate::assertChoice(xVar, c("learner_id", "task_id", "measure"))
@@ -52,6 +53,9 @@ plotBMRBoxplots = function(bmr, style = "box", xVar = "learner_id", facet_x = "t
   } else {
     p = p + geom_dotplot(binaxis = "y", stackdir = "center", position = "dodge", size = 1)
     #    p = p + geom_jitter()
+  }
+  if (xVar == "learner_id") {
+    p = p + theme(axis.text.x = element_text(angle = 90, hjust = 1))
   }
   return(plotWithTheme(p))
 }

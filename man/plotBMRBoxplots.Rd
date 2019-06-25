@@ -23,3 +23,6 @@ or \dQuote{dot} for a dot plot. Default is \dQuote{box}.}
 Plots box, violin or dot plots for all `measure` across all iterations
 of the resampling strategy in all `learner_id`, faceted by the `task.id` and `measure`.
 }
+\examples{
+1
+}

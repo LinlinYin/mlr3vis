@@ -14,3 +14,6 @@ generateThreshVsPerfData(e, gridsize = 100L)
 \description{
 Generates data on threshold vs. performance(s) for 2-class classification that can be used for plotting.
 }
+\examples{
+1
+}

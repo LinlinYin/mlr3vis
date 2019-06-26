@@ -61,7 +61,22 @@ plotBMRBoxplots = function(bmr, style = "box", xVar = "learner_id", facet_x = "t
 }
 
 
+#' @title Create a bar chart for ranks in a BenchmarkResult.
+#'
+#' @description
+#' Plots a bar chart from the ranks of algorithms. Alternatively, tiles can be plotted for every
+#' rank-task combination, see pos for details. In all plot variants the ranks of the learning
+#' algorithms are displayed on the x-axis. Areas are always colored according to the learner.id.
+#'
+#'
+#' @param bmr the BenchmarkResult object
+#' @param pos Optionally set how the bars are positioned in ggplot2. Ranks are plotted on the x-axis.
+#'  “tile” plots a heat map with task as the y-axis. Allows identification of the performance in a
+#'  special task. “stack” plots a stacked bar plot. Allows for comparison of learners within and and
+#'  across ranks. “dodge” plots a bar plot with bars next to each other instead of stacked bars.
 #' @export
+#' @examples
+#' 1
 plotBMRRanksAsBarChart = function(bmr, pos = "tile") {
   checkmate::assertChoice(pos, c("tile", "stack", "dodge"))
 

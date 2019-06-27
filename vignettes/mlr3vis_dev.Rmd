@@ -171,3 +171,23 @@ plotROCCurves(performanceByThreshold)
 
 ```
 
+## generateThreshVsPerfData from Benchmark
+```{r}
+library(data.table)
+design = data.table(
+  task = mlr_tasks$mget("sonar"),
+  learner = mlr_learners$mget(c("classif.rpart", "classif.featureless"),predict_type = "prob"),
+  resampling = mlr_resamplings$mget("holdout")
+)
+print(design)
+##             task                     learner          resampling
+## 1: <TaskClassif>       <LearnerClassifRpart> <ResamplingHoldout>
+## 2: <TaskClassif> <LearnerClassifFeatureless> <ResamplingHoldout>
+bmr = benchmark(design)
+
+performanceData=generateThreshVsPerfDataInBenchmark(bmr)
+
+```
+
+
+

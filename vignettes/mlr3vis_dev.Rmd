@@ -19,7 +19,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Test for visulization functions from mlr to mlr3
 
 ```{r}
 #library(mlr3)
@@ -38,7 +37,7 @@ mlr: https://mlr.mlr-org.com/articles/tutorial/predict.html
 
 mlr3: https://mlr3book.mlr-org.com/  
 
-## plotLearnerPrediction
+# plotLearnerPrediction
 
 ```{r}
 
@@ -46,14 +45,12 @@ task = mlr_tasks$get("iris")
 learner = mlr_learners$get("classif.rpart")
 
 plotLearnerPrediction(learner=learner,task=task,prob.alpha = FALSE)
-
-
-plotLearnerPrediction(learner=learner,task=task,features=c("Sepal.Length","Sepal.Width"))
+plotLearnerPrediction(learner=learner,task=task,prob.alpha = TRUE, interestedFeatures= c("Sepal.Length","Sepal.Width"))
 
 ```
 
-
-## plotLearnerPrediction based on Experiment
+# Experiment related visualization
+## plotLearnerPrediction based on Experiment (in the same function)
 
 ```{r}
 
@@ -64,11 +61,13 @@ e = Experiment$new(task = task, learner = learner)$train()$predict()
 e$performance #NULL
 e$score()$performance
 
-plotLearnerPredictionExperiment(e)
+plotLearnerPrediction(e=e)
 
 ```
 
 ## summaryFeatureByPrediction based on Experiment
+To show the distribution of features among truth or response groups.
+
 ```{r,results='asis'}
 
 summaryFeatureByPrediction(e,groupVar="truth")
@@ -79,6 +78,9 @@ summaryFeatureByPrediction(e,groupVar="response")
 
 
 ## plotFeatureByPrediction based on Experiment
+
+To plot the distribution of features among truth or response groups.
+
 ```{r}
 
 plotFeatureByPrediction(e,groupVar="truth")
@@ -90,7 +92,7 @@ plotFeatureByPrediction(e,groupVar="response",style = "dot")
 
 
 
-## benchmark related
+# benchmark related
 ```{r}
 
 # get some example tasks
@@ -127,7 +129,7 @@ bmr = benchmark(design)
 
 ```
 
-### plotBMRBoxplots
+## plotBMRBoxplots
 ```{r}
 
 plotBMRBoxplots(bmr)
@@ -139,10 +141,12 @@ plotBMRBoxplots(bmr,style = "dot")
 ```
 
 
-### plotBMRRanksAsBarChart
+## plotBMRRanksAsBarChart
 ```{r}
 plotBMRRanksAsBarChart(bmr)
 ```
+
+# Visualization of ThreshVsPerfData
 
 ## generateThreshVsPerfData and plotThreshVsPerf
 
@@ -172,22 +176,24 @@ plotROCCurves(performanceByThreshold)
 
 ```
 
-## generateThreshVsPerfData from Benchmark and plotThreshVsPerf
+## generateThreshVsPerfData and plotThreshVsPerf for Benchmark object
 ```{r}
+set.seed(123)
 
-tasks = mlr_tasks$mget(c( "sonar"))
+tasks = mlr_tasks$mget(c("sonar"))
 measures = mlr_measures$mget(c("classif.ce","classif.fpr","classif.tpr"))
 tasks = lapply(tasks, function(task) { task$measures = measures; task })
 
 design = expand_grid(
   task = tasks,
   learner = mlr_learners$mget(c("classif.rpart", "classif.featureless"),predict_type = "prob"),
-  resampling = mlr_resamplings$mget("cv")
+  resampling = mlr_resamplings$mget("holdout")
 )
 print(design)
 ##             task                     learner          resampling
 ## 1: <TaskClassif>       <LearnerClassifRpart> <ResamplingHoldout>
 ## 2: <TaskClassif> <LearnerClassifFeatureless> <ResamplingHoldout>
+
 bmr = benchmark(design)
 
 performanceData=generateThreshVsPerfDataInBenchmark(bmr)
@@ -197,6 +203,9 @@ plotThreshVsPerf(performanceData)
 ```
 
 ## ROC based on generateThreshVsPerfData from Benchmark
+
+This figure is correct. The curve looks a little weird because of the performance of classif.featureless in the data.
+
 ```{r}
 
 plotROCCurves(performanceData)

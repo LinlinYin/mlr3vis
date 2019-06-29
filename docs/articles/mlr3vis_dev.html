@@ -73,7 +73,7 @@
       <h1>mlr3 vis development</h1>
                         <h4 class="author">Linlin Yin</h4>
             
-            <h4 class="date">2019-06-24</h4>
+            <h4 class="date">2019-06-28</h4>
       
       
       <div class="hidden name"><code>mlr3vis_dev.Rmd</code></div>
@@ -82,9 +82,6 @@
 
     
     
-<div id="test-for-visulization-functions-from-mlr-to-mlr3" class="section level1">
-<h1 class="hasAnchor">
-<a href="#test-for-visulization-functions-from-mlr-to-mlr3" class="anchor"></a>Test for visulization functions from mlr to mlr3</h1>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co">#library(mlr3)</span></a>
 <a class="sourceLine" id="cb1-2" title="2"><span class="co">#library(ggplot2)</span></a>
 <a class="sourceLine" id="cb1-3" title="3"><span class="co">#library(data.table)</span></a>
@@ -95,45 +92,49 @@
 <a class="sourceLine" id="cb1-8" title="8"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(mlr3)</a>
 <a class="sourceLine" id="cb1-9" title="9"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(mlr3vis)</a>
 <a class="sourceLine" id="cb1-10" title="10"><span class="co">#&gt; Loading required package: data.table</span></a>
-<a class="sourceLine" id="cb1-11" title="11"><span class="co">#&gt; Loading required package: ggplot2</span></a>
-<a class="sourceLine" id="cb1-12" title="12"><span class="co">#&gt; Loading required package: ggpubr</span></a>
-<a class="sourceLine" id="cb1-13" title="13"><span class="co">#&gt; Loading required package: magrittr</span></a>
-<a class="sourceLine" id="cb1-14" title="14"><span class="co">#&gt; mlr3vis global settings: mlr_plot_theme=theme_pubr</span></a></code></pre></div>
+<a class="sourceLine" id="cb1-11" title="11"><span class="co">#&gt; Warning: package 'data.table' was built under R version 3.5.3</span></a>
+<a class="sourceLine" id="cb1-12" title="12"><span class="co">#&gt; Loading required package: ggplot2</span></a>
+<a class="sourceLine" id="cb1-13" title="13"><span class="co">#&gt; Loading required package: ggpubr</span></a>
+<a class="sourceLine" id="cb1-14" title="14"><span class="co">#&gt; Loading required package: magrittr</span></a>
+<a class="sourceLine" id="cb1-15" title="15"><span class="co">#&gt; mlr3vis global settings: mlr_plot_theme=theme_pubr</span></a></code></pre></div>
 <p>mlr: <a href="https://mlr.mlr-org.com/articles/tutorial/predict.html" class="uri">https://mlr.mlr-org.com/articles/tutorial/predict.html</a></p>
 <p>mlr3: <a href="https://mlr3book.mlr-org.com/" class="uri">https://mlr3book.mlr-org.com/</a></p>
-<div id="plotlearnerprediction" class="section level2">
-<h2 class="hasAnchor">
-<a href="#plotlearnerprediction" class="anchor"></a>plotLearnerPrediction</h2>
+<div id="plotlearnerprediction" class="section level1">
+<h1 class="hasAnchor">
+<a href="#plotlearnerprediction" class="anchor"></a>plotLearnerPrediction</h1>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"></a>
 <a class="sourceLine" id="cb2-2" title="2">task =<span class="st"> </span>mlr_tasks<span class="op">$</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/get">get</a></span>(<span class="st">"iris"</span>)</a>
 <a class="sourceLine" id="cb2-3" title="3">learner =<span class="st"> </span>mlr_learners<span class="op">$</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/get">get</a></span>(<span class="st">"classif.rpart"</span>)</a>
 <a class="sourceLine" id="cb2-4" title="4"></a>
 <a class="sourceLine" id="cb2-5" title="5"><span class="kw">plotLearnerPrediction</span>(<span class="dt">learner=</span>learner,<span class="dt">task=</span>task,<span class="dt">prob.alpha =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 <p><img src="mlr3vis_dev_files/figure-html/unnamed-chunk-2-1.png" width="672"></p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"></a>
-<a class="sourceLine" id="cb3-2" title="2"></a>
-<a class="sourceLine" id="cb3-3" title="3"><span class="kw">plotLearnerPrediction</span>(<span class="dt">learner=</span>learner,<span class="dt">task=</span>task,<span class="dt">features=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Sepal.Length"</span>,<span class="st">"Sepal.Width"</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">plotLearnerPrediction</span>(<span class="dt">learner=</span>learner,<span class="dt">task=</span>task,<span class="dt">prob.alpha =</span> <span class="ot">TRUE</span>, <span class="dt">interestedFeatures=</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Sepal.Length"</span>,<span class="st">"Sepal.Width"</span>))</a></code></pre></div>
 <p><img src="mlr3vis_dev_files/figure-html/unnamed-chunk-2-2.png" width="672"></p>
 </div>
-<div id="plotlearnerprediction-based-on-experiment" class="section level2">
+<div id="experiment-related-visualization" class="section level1">
+<h1 class="hasAnchor">
+<a href="#experiment-related-visualization" class="anchor"></a>Experiment related visualization</h1>
+<div id="plotlearnerprediction-based-on-experiment-in-the-same-function" class="section level2">
 <h2 class="hasAnchor">
-<a href="#plotlearnerprediction-based-on-experiment" class="anchor"></a>plotLearnerPrediction based on Experiment</h2>
+<a href="#plotlearnerprediction-based-on-experiment-in-the-same-function" class="anchor"></a>plotLearnerPrediction based on Experiment (in the same function)</h2>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"></a>
 <a class="sourceLine" id="cb4-2" title="2">task =<span class="st"> </span>mlr_tasks<span class="op">$</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/get">get</a></span>(<span class="st">"iris"</span>)</a>
 <a class="sourceLine" id="cb4-3" title="3">learner =<span class="st"> </span>mlr_learners<span class="op">$</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/get">get</a></span>(<span class="st">"classif.rpart"</span>)</a>
-<a class="sourceLine" id="cb4-4" title="4">e =<span class="st"> </span>Experiment<span class="op">$</span><span class="kw">new</span>(<span class="dt">task =</span> task, <span class="dt">learner =</span> learner)<span class="op">$</span><span class="kw">train</span>()<span class="op">$</span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/predict">predict</a></span>()</a>
-<a class="sourceLine" id="cb4-5" title="5">e<span class="op">$</span>performance <span class="co">#NULL</span></a>
-<a class="sourceLine" id="cb4-6" title="6"><span class="co">#&gt; NULL</span></a>
-<a class="sourceLine" id="cb4-7" title="7">e<span class="op">$</span><span class="kw">score</span>()<span class="op">$</span>performance</a>
-<a class="sourceLine" id="cb4-8" title="8"><span class="co">#&gt; classif.ce </span></a>
-<a class="sourceLine" id="cb4-9" title="9"><span class="co">#&gt;       0.04</span></a>
-<a class="sourceLine" id="cb4-10" title="10"></a>
-<a class="sourceLine" id="cb4-11" title="11"><span class="kw">plotLearnerPredictionExperiment</span>(e)</a></code></pre></div>
+<a class="sourceLine" id="cb4-4" title="4">learner<span class="op">$</span>predict_type =<span class="st"> "prob"</span></a>
+<a class="sourceLine" id="cb4-5" title="5">e =<span class="st"> </span>Experiment<span class="op">$</span><span class="kw">new</span>(<span class="dt">task =</span> task, <span class="dt">learner =</span> learner)<span class="op">$</span><span class="kw">train</span>()<span class="op">$</span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/predict">predict</a></span>()</a>
+<a class="sourceLine" id="cb4-6" title="6">e<span class="op">$</span>performance <span class="co">#NULL</span></a>
+<a class="sourceLine" id="cb4-7" title="7"><span class="co">#&gt; NULL</span></a>
+<a class="sourceLine" id="cb4-8" title="8">e<span class="op">$</span><span class="kw">score</span>()<span class="op">$</span>performance</a>
+<a class="sourceLine" id="cb4-9" title="9"><span class="co">#&gt; classif.ce </span></a>
+<a class="sourceLine" id="cb4-10" title="10"><span class="co">#&gt;       0.04</span></a>
+<a class="sourceLine" id="cb4-11" title="11"></a>
+<a class="sourceLine" id="cb4-12" title="12"><span class="kw">plotLearnerPrediction</span>(<span class="dt">e=</span>e)</a></code></pre></div>
 <p><img src="mlr3vis_dev_files/figure-html/unnamed-chunk-3-1.png" width="672"></p>
 </div>
 <div id="summaryfeaturebyprediction-based-on-experiment" class="section level2">
 <h2 class="hasAnchor">
 <a href="#summaryfeaturebyprediction-based-on-experiment" class="anchor"></a>summaryFeatureByPrediction based on Experiment</h2>
+<p>To show the distribution of features among truth or response groups.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"></a>
 <a class="sourceLine" id="cb5-2" title="2"><span class="kw">summaryFeatureByPrediction</span>(e,<span class="dt">groupVar=</span><span class="st">"truth"</span>)</a>
 <a class="sourceLine" id="cb5-3" title="3"><span class="co">#&gt; Loading required package: lattice</span></a>
@@ -244,6 +245,7 @@
 <div id="plotfeaturebyprediction-based-on-experiment" class="section level2">
 <h2 class="hasAnchor">
 <a href="#plotfeaturebyprediction-based-on-experiment" class="anchor"></a>plotFeatureByPrediction based on Experiment</h2>
+<p>To plot the distribution of features among truth or response groups.</p>
 <div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" title="1"></a>
 <a class="sourceLine" id="cb31-2" title="2"><span class="kw">plotFeatureByPrediction</span>(e,<span class="dt">groupVar=</span><span class="st">"truth"</span>)</a></code></pre></div>
 <p><img src="mlr3vis_dev_files/figure-html/unnamed-chunk-5-1.png" width="672"></p>
@@ -253,9 +255,10 @@
 <a class="sourceLine" id="cb32-4" title="4"><span class="co">#&gt; `stat_bindot()` using `bins = 30`. Pick better value with `binwidth`.</span></a></code></pre></div>
 <p><img src="mlr3vis_dev_files/figure-html/unnamed-chunk-5-2.png" width="672"></p>
 </div>
-<div id="benchmark-related" class="section level2">
-<h2 class="hasAnchor">
-<a href="#benchmark-related" class="anchor"></a>benchmark related</h2>
+</div>
+<div id="benchmark-related" class="section level1">
+<h1 class="hasAnchor">
+<a href="#benchmark-related" class="anchor"></a>benchmark related</h1>
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" title="1"></a>
 <a class="sourceLine" id="cb33-2" title="2"><span class="co"># get some example tasks</span></a>
 <a class="sourceLine" id="cb33-3" title="3">tasks =<span class="st"> </span>mlr_tasks<span class="op">$</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/get">mget</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"pima"</span>, <span class="st">"sonar"</span>, <span class="st">"spam"</span>))</a>
@@ -291,9 +294,9 @@
 <a class="sourceLine" id="cb33-33" title="33"><span class="co">#bmr</span></a>
 <a class="sourceLine" id="cb33-34" title="34"><span class="co">#bmr$aggregated(objects = FALSE)</span></a>
 <a class="sourceLine" id="cb33-35" title="35"><span class="co">#bmr$aggregated(objects = FALSE)[, list(acc = mean(classif.acc), auc = mean(classif.auc)), by = "learner_id"]</span></a></code></pre></div>
-<div id="plotbmrboxplots" class="section level3">
-<h3 class="hasAnchor">
-<a href="#plotbmrboxplots" class="anchor"></a>plotBMRBoxplots</h3>
+<div id="plotbmrboxplots" class="section level2">
+<h2 class="hasAnchor">
+<a href="#plotbmrboxplots" class="anchor"></a>plotBMRBoxplots</h2>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" title="1"></a>
 <a class="sourceLine" id="cb34-2" title="2"><span class="kw"><a href="../reference/plotBMRBoxplots.html">plotBMRBoxplots</a></span>(bmr)</a></code></pre></div>
 <p><img src="mlr3vis_dev_files/figure-html/unnamed-chunk-7-1.png" width="672"></p>
@@ -306,13 +309,16 @@
 <a class="sourceLine" id="cb36-4" title="4"><span class="co">#&gt; `stat_bindot()` using `bins = 30`. Pick better value with `binwidth`.</span></a></code></pre></div>
 <p><img src="mlr3vis_dev_files/figure-html/unnamed-chunk-7-3.png" width="672"></p>
 </div>
-<div id="plotbmrranksasbarchart" class="section level3">
-<h3 class="hasAnchor">
-<a href="#plotbmrranksasbarchart" class="anchor"></a>plotBMRRanksAsBarChart</h3>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" title="1"><span class="kw">plotBMRRanksAsBarChart</span>(bmr)</a></code></pre></div>
+<div id="plotbmrranksasbarchart" class="section level2">
+<h2 class="hasAnchor">
+<a href="#plotbmrranksasbarchart" class="anchor"></a>plotBMRRanksAsBarChart</h2>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" title="1"><span class="kw"><a href="../reference/plotBMRRanksAsBarChart.html">plotBMRRanksAsBarChart</a></span>(bmr)</a></code></pre></div>
 <p><img src="mlr3vis_dev_files/figure-html/unnamed-chunk-8-1.png" width="672"></p>
 </div>
 </div>
+<div id="visualization-of-threshvsperfdata" class="section level1">
+<h1 class="hasAnchor">
+<a href="#visualization-of-threshvsperfdata" class="anchor"></a>Visualization of ThreshVsPerfData</h1>
 <div id="generatethreshvsperfdata-and-plotthreshvsperf" class="section level2">
 <h2 class="hasAnchor">
 <a href="#generatethreshvsperfdata-and-plotthreshvsperf" class="anchor"></a>generateThreshVsPerfData and plotThreshVsPerf</h2>
@@ -338,8 +344,8 @@
 <a class="sourceLine" id="cb38-20" title="20"><span class="co">#&gt; classif.acc  classif.ce classif.fpr classif.tpr </span></a>
 <a class="sourceLine" id="cb38-21" title="21"><span class="co">#&gt;   0.8750000   0.1250000   0.1030928   0.8558559</span></a>
 <a class="sourceLine" id="cb38-22" title="22"></a>
-<a class="sourceLine" id="cb38-23" title="23">performanceByThreshold=<span class="kw"><a href="../reference/generateThreshVsPerfData.html">generateThreshVsPerfData</a></span>(e)</a>
-<a class="sourceLine" id="cb38-24" title="24"><span class="kw">plotThreshVsPerf</span>(performanceByThreshold)</a></code></pre></div>
+<a class="sourceLine" id="cb38-23" title="23">performanceByThreshold=<span class="kw"><a href="../reference/generateThreshVsPerfData.html">generateThreshVsPerfData</a></span>(e,<span class="dt">gridsize =</span> <span class="dv">200</span>)</a>
+<a class="sourceLine" id="cb38-24" title="24"><span class="kw"><a href="../reference/plotThreshVsPerf.html">plotThreshVsPerf</a></span>(performanceByThreshold)</a></code></pre></div>
 <p><img src="mlr3vis_dev_files/figure-html/unnamed-chunk-9-1.png" width="672"></p>
 </div>
 <div id="roc-based-on-generatethreshvsperfdata" class="section level2">
@@ -349,6 +355,42 @@
 <a class="sourceLine" id="cb39-2" title="2"><span class="kw">plotROCCurves</span>(performanceByThreshold)</a></code></pre></div>
 <p><img src="mlr3vis_dev_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
 </div>
+<div id="generatethreshvsperfdata-and-plotthreshvsperf-for-benchmark-object" class="section level2">
+<h2 class="hasAnchor">
+<a href="#generatethreshvsperfdata-and-plotthreshvsperf-for-benchmark-object" class="anchor"></a>generateThreshVsPerfData and plotThreshVsPerf for Benchmark object</h2>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">123</span>)</a>
+<a class="sourceLine" id="cb40-2" title="2"></a>
+<a class="sourceLine" id="cb40-3" title="3">tasks =<span class="st"> </span>mlr_tasks<span class="op">$</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/get">mget</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"sonar"</span>))</a>
+<a class="sourceLine" id="cb40-4" title="4">measures =<span class="st"> </span>mlr_measures<span class="op">$</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/get">mget</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"classif.ce"</span>,<span class="st">"classif.fpr"</span>,<span class="st">"classif.tpr"</span>))</a>
+<a class="sourceLine" id="cb40-5" title="5">tasks =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(tasks, <span class="cf">function</span>(task) { task<span class="op">$</span>measures =<span class="st"> </span>measures; task })</a>
+<a class="sourceLine" id="cb40-6" title="6"></a>
+<a class="sourceLine" id="cb40-7" title="7">design =<span class="st"> </span><span class="kw">expand_grid</span>(</a>
+<a class="sourceLine" id="cb40-8" title="8">  <span class="dt">task =</span> tasks,</a>
+<a class="sourceLine" id="cb40-9" title="9">  <span class="dt">learner =</span> mlr_learners<span class="op">$</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/get">mget</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"classif.rpart"</span>, <span class="st">"classif.featureless"</span>),<span class="dt">predict_type =</span> <span class="st">"prob"</span>),</a>
+<a class="sourceLine" id="cb40-10" title="10">  <span class="dt">resampling =</span> mlr_resamplings<span class="op">$</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/get">mget</a></span>(<span class="st">"holdout"</span>)</a>
+<a class="sourceLine" id="cb40-11" title="11">)</a>
+<a class="sourceLine" id="cb40-12" title="12"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(design)</a>
+<a class="sourceLine" id="cb40-13" title="13"><span class="co">#&gt;             task                     learner          resampling</span></a>
+<a class="sourceLine" id="cb40-14" title="14"><span class="co">#&gt; 1: &lt;TaskClassif&gt;       &lt;LearnerClassifRpart&gt; &lt;ResamplingHoldout&gt;</span></a>
+<a class="sourceLine" id="cb40-15" title="15"><span class="co">#&gt; 2: &lt;TaskClassif&gt; &lt;LearnerClassifFeatureless&gt; &lt;ResamplingHoldout&gt;</span></a>
+<a class="sourceLine" id="cb40-16" title="16"><span class="co">##             task                     learner          resampling</span></a>
+<a class="sourceLine" id="cb40-17" title="17"><span class="co">## 1: &lt;TaskClassif&gt;       &lt;LearnerClassifRpart&gt; &lt;ResamplingHoldout&gt;</span></a>
+<a class="sourceLine" id="cb40-18" title="18"><span class="co">## 2: &lt;TaskClassif&gt; &lt;LearnerClassifFeatureless&gt; &lt;ResamplingHoldout&gt;</span></a>
+<a class="sourceLine" id="cb40-19" title="19"></a>
+<a class="sourceLine" id="cb40-20" title="20">bmr =<span class="st"> </span><span class="kw">benchmark</span>(design)</a>
+<a class="sourceLine" id="cb40-21" title="21"></a>
+<a class="sourceLine" id="cb40-22" title="22">performanceData=<span class="kw"><a href="../reference/generateThreshVsPerfDataInBenchmark.html">generateThreshVsPerfDataInBenchmark</a></span>(bmr)</a>
+<a class="sourceLine" id="cb40-23" title="23"><span class="kw"><a href="../reference/plotThreshVsPerf.html">plotThreshVsPerf</a></span>(performanceData)</a></code></pre></div>
+<p><img src="mlr3vis_dev_files/figure-html/unnamed-chunk-11-1.png" width="672"></p>
+</div>
+<div id="roc-based-on-generatethreshvsperfdata-from-benchmark" class="section level2">
+<h2 class="hasAnchor">
+<a href="#roc-based-on-generatethreshvsperfdata-from-benchmark" class="anchor"></a>ROC based on generateThreshVsPerfData from Benchmark</h2>
+<p>This figure is correct. The curve looks a little weird because of the performance of classif.featureless in the data.</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" title="1"></a>
+<a class="sourceLine" id="cb41-2" title="2"><span class="kw">plotROCCurves</span>(performanceData)</a></code></pre></div>
+<p><img src="mlr3vis_dev_files/figure-html/unnamed-chunk-12-1.png" width="672"></p>
+</div>
 </div>
   </div>
 
@@ -357,15 +399,26 @@
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li>
-<a href="#test-for-visulization-functions-from-mlr-to-mlr3">Test for visulization functions from mlr to mlr3</a><ul class="nav nav-pills nav-stacked">
 <li><a href="#plotlearnerprediction">plotLearnerPrediction</a></li>
-      <li><a href="#plotlearnerprediction-based-on-experiment">plotLearnerPrediction based on Experiment</a></li>
+      <li>
+<a href="#experiment-related-visualization">Experiment related visualization</a><ul class="nav nav-pills nav-stacked">
+<li><a href="#plotlearnerprediction-based-on-experiment-in-the-same-function">plotLearnerPrediction based on Experiment (in the same function)</a></li>
       <li><a href="#summaryfeaturebyprediction-based-on-experiment">summaryFeatureByPrediction based on Experiment</a></li>
       <li><a href="#plotfeaturebyprediction-based-on-experiment">plotFeatureByPrediction based on Experiment</a></li>
-      <li><a href="#benchmark-related">benchmark related</a></li>
-      <li><a href="#generatethreshvsperfdata-and-plotthreshvsperf">generateThreshVsPerfData and plotThreshVsPerf</a></li>
+      </ul>
+</li>
+      <li>
+<a href="#benchmark-related">benchmark related</a><ul class="nav nav-pills nav-stacked">
+<li><a href="#plotbmrboxplots">plotBMRBoxplots</a></li>
+      <li><a href="#plotbmrranksasbarchart">plotBMRRanksAsBarChart</a></li>
+      </ul>
+</li>
+      <li>
+<a href="#visualization-of-threshvsperfdata">Visualization of ThreshVsPerfData</a><ul class="nav nav-pills nav-stacked">
+<li><a href="#generatethreshvsperfdata-and-plotthreshvsperf">generateThreshVsPerfData and plotThreshVsPerf</a></li>
       <li><a href="#roc-based-on-generatethreshvsperfdata">ROC based on generateThreshVsPerfData</a></li>
+      <li><a href="#generatethreshvsperfdata-and-plotthreshvsperf-for-benchmark-object">generateThreshVsPerfData and plotThreshVsPerf for Benchmark object</a></li>
+      <li><a href="#roc-based-on-generatethreshvsperfdata-from-benchmark">ROC based on generateThreshVsPerfData from Benchmark</a></li>
       </ul>
 </li>
       </ul>

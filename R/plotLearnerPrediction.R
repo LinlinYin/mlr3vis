@@ -1,7 +1,7 @@
 #' @title Show model prediction results diustribution on 2 selected features.
 #'
 #' @description
-#' This function need learner and tak as input, and will swhow use the model. It is similar as the function
+#' This function need learner and task as input, and will use the orginal model in learner. It is similar as the function
 #' with same name in mlr but it used orginal model in learner (usually used all features) rather than make
 #' a new model based on only two selected features. The interestedFeatures were only used for visulization
 #' purpose as X axis and Y axis. To show the distribution of prediction result or probability, grid with
@@ -35,7 +35,7 @@ plotLearnerPrediction = function(learner = NULL, task = NULL,  interestedFeature
   subjectData = makeSubjectData(learner,task, interestedFeatures)
 
   gridData = makeGridData(task, interestedFeatures, gridsize = gridsize)
-  gridData = gridDataPrediction(task, grid = gridData)
+  gridData = gridDataPrediction(task, gridData = gridData)
 
   p = plotGridAndSubjectData(subjectData, gridData, interestedFeatures,
                              prob.alpha = prob.alpha,
@@ -112,7 +112,7 @@ gridDataPrediction = function(task, gridData) {
     gridData = cbind(gridData, notInterestedFeaturesValue)
   }
 
-  gridPredictions=learner$predict_newdata(taskClone,gridData)
+  gridPredictions=learner$predict_newdata(taskClone,newdata=gridData)
 
   gridData[, target] = gridPredictions$response
   gridData = cbind(gridData, .prob.pred.class = apply(gridPredictions$prob, 1, max))

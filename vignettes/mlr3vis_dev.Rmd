@@ -37,20 +37,15 @@ mlr: https://mlr.mlr-org.com/articles/tutorial/predict.html
 
 mlr3: https://mlr3book.mlr-org.com/  
 
-# plotLearnerPrediction
 
-```{r}
+# Learner and Task related
 
-task = mlr_tasks$get("iris")
-learner = mlr_learners$get("classif.rpart")
+## plotLearnerPrediction
 
-plotLearnerPrediction(learner=learner,task=task,prob.alpha = FALSE)
-plotLearnerPrediction(learner=learner,task=task,prob.alpha = TRUE, interestedFeatures= c("Sepal.Length","Sepal.Width"))
+This function need learner and task as input. The goal of this function is to show the priediction results with distribution of interested features. It is similar as the function with same name in mlr but it used orginal model in learner (usually used all features) rather than make a new model based on only two interested features. The interestedFeatures were only used for visulization
+purpose as X axis and Y axis. To show the distribution of prediction result or probability with changes of interested features, grid with different colours were plotted as background. The prediction of grid used orginal model in learner, and interestedFeatures among X and Y axis as data. The median values or most common values for Features used in model but not in interestedFeatures were used to paticipate prediction of the grid background.  
 
-```
-
-# Experiment related visualization
-## plotLearnerPrediction based on Experiment (in the same function)
+An example listed below. prob.alpha = FALSE shows prediction result, prob.alpha = TRUE shows maximal probability.
 
 ```{r}
 
@@ -59,154 +54,30 @@ learner = mlr_learners$get("classif.rpart")
 learner$predict_type = "prob"
 learner$train(task)
 
-plotLearnerPrediction(learner=learner,task=task)
+plotLearnerPrediction(learner=learner,task=task,prob.alpha = FALSE)
+plotLearnerPrediction(learner=learner,task=task,prob.alpha = TRUE)
+
 
 ```
 
-## summaryFeatureByPrediction based on Experiment
-To show the distribution of features among truth or response groups.
+## Combination of plotLearnerPrediction
 
-```{r,results='asis'}
+This is very interesting to how the distribution of prediction result among different combination of features. Here we found that although there were four features in the learner, they have different roles. "Petal.Length" was used to preidcit "setosa"; "Petal.Width" was used to predict "virginica". "Sepal.Width" and "Sepal.Length" didn't contribute in this model.
 
-summaryFeatureByPrediction(e,groupVar="truth")
-
-summaryFeatureByPrediction(e,groupVar="response")
-
-```
-
-
-## plotFeatureByPrediction based on Experiment
-
-To plot the distribution of features among truth or response groups.
 
 ```{r}
+p1=plotLearnerPrediction(learner=learner,task=task,prob.alpha = TRUE, interestedFeatures= c("Sepal.Length","Petal.Length"))
 
-plotFeatureByPrediction(e,groupVar="truth")
+p2=plotLearnerPrediction(learner=learner,task=task,prob.alpha = TRUE, interestedFeatures= c("Sepal.Length","Petal.Width"))
 
-plotFeatureByPrediction(e,groupVar="response",style = "dot")
+p3=plotLearnerPrediction(learner=learner,task=task,prob.alpha = TRUE, interestedFeatures= c("Sepal.Length","Sepal.Width"))
 
-```
+p4=plotLearnerPrediction(learner=learner,task=task,prob.alpha = TRUE, interestedFeatures= c("Petal.Width","Petal.Length"))
 
-
-
-
-# benchmark related
-```{r}
-
-# get some example tasks
-tasks = mlr_tasks$mget(c("pima", "sonar", "spam"))
-
-# set measures for all tasks: accuracy (acc) and area under the curve (auc)
-measures = mlr_measures$mget(c("classif.acc", "classif.auc"))
-tasks = lapply(tasks, function(task) { task$measures = measures; task })
-
-# get a featureless learner and a classification tree
-learners = mlr_learners$mget(c("classif.featureless", "classif.rpart"))
-
-# let the learners predict probabilities instead of class labels (required for AUC measure)
-learners$classif.featureless$predict_type = "prob"
-learners$classif.rpart$predict_type = "prob"
-
-# compare via 10-fold cross validation
-resamplings = mlr_resamplings$mget("cv")
-
-# create a BenchmarkResult object
-design = expand_grid(tasks, learners, resamplings)
-print(design)
-
-
-bmr = benchmark(design)
-
-#bmr
-#bmr$aggregated(objects = FALSE)
-#bmr$aggregated(objects = FALSE)[, list(acc = mean(classif.acc), auc = mean(classif.auc)), by = "learner_id"]
-
-
-
+ggarrange(p1,p2,p3,p4,common.legend = TRUE)
 
 
 ```
 
-## plotBMRBoxplots
-```{r}
 
-plotBMRBoxplots(bmr)
-#Different facet and violin plot
-plotBMRBoxplots(bmr,style = "violin",xVar="task_id",facet_x="measure",facet_y="learner_id")
-#Dot plot
-plotBMRBoxplots(bmr,style = "dot")
-
-```
-
-
-## plotBMRRanksAsBarChart
-```{r}
-plotBMRRanksAsBarChart(bmr)
-```
-
-# Visualization of ThreshVsPerfData
-
-## generateThreshVsPerfData and plotThreshVsPerf
-
-```{r}
-
-task = mlr_tasks$get("sonar")
-task$measures
-measures = mlr_measures$mget(c("classif.acc","classif.ce","classif.fpr","classif.tpr"))
-task$measures = measures
-
-learner = mlr_learners$get("classif.rpart",predict_type = "prob")
-#learner$predict_type
-#learner$predict_type = "prob"
-e = Experiment$new(task = task, learner = learner)$train()$predict()
-e$performance #NULL
-e$score()$performance
-
-performanceByThreshold=generateThreshVsPerfData(e,gridsize = 200)
-plotThreshVsPerf(performanceByThreshold)
-
-```
-
-## ROC based on generateThreshVsPerfData
-```{r}
-
-plotROCCurves(performanceByThreshold)
-
-```
-
-## generateThreshVsPerfData and plotThreshVsPerf for Benchmark object
-```{r}
-set.seed(123)
-
-tasks = mlr_tasks$mget(c("sonar"))
-measures = mlr_measures$mget(c("classif.ce","classif.fpr","classif.tpr"))
-tasks = lapply(tasks, function(task) { task$measures = measures; task })
-
-design = expand_grid(
-  task = tasks,
-  learner = mlr_learners$mget(c("classif.rpart", "classif.featureless"),predict_type = "prob"),
-  resampling = mlr_resamplings$mget("holdout")
-)
-print(design)
-##             task                     learner          resampling
-## 1: <TaskClassif>       <LearnerClassifRpart> <ResamplingHoldout>
-## 2: <TaskClassif> <LearnerClassifFeatureless> <ResamplingHoldout>
-
-bmr = benchmark(design)
-
-performanceData=generateThreshVsPerfDataInBenchmark(bmr)
-plotThreshVsPerf(performanceData)
-
-
-```
-
-## ROC based on generateThreshVsPerfData from Benchmark
-
-This figure is correct. The curve looks a little weird because of the performance of classif.featureless in the data.
-
-```{r}
-
-plotROCCurves(performanceData)
-
-```
-
+All introduction for other functions are removed on purpose since I am not sure if they can work with latest version of mlr3 at this time. Will add them back later.

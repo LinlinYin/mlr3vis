@@ -1,11 +1,11 @@
 #' @export
 #'
-summaryFeatureByPrediction = function(e, printHtml = FALSE, groupVar = "truth") {
+summaryFeatureByPrediction = function(learner, printHtml = FALSE, groupVar = "truth") {
 
   checkmate::assertChoice(groupVar, c("truth", "response"))
 
   #  target = e$task$target_names
-  predictionResult = as.data.table(e$prediction)
+  predictionResult = as.data.table(learner$prediction)
   #  predictionResult$.err = predictionResult$response != predictionResult$truth
 
 

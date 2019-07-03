@@ -21,12 +21,6 @@ knitr::opts_chunk$set(
 
 
 ```{r}
-#library(mlr3)
-#library(ggplot2)
-#library(data.table)
-#library(dplyr)
-#library(checkmate)
-
 #devtools::load_all("d:/source/mlr3vis/")
 library(mlr3)
 library(mlr3vis)
@@ -88,7 +82,30 @@ ggarrange(p1,p2,p3,p4,p5,p6,common.legend = TRUE,ncol=2,nrow=3)
 
 ```
 
-  
+
+## summaryFeatureInTask
+This function shows distribution of features among target groups and their  differential p values.
+
+```{r,results='asis'}
+
+summaryFeatureInTask(task)
+
+```
+
+
+## plotFeatureInTask
+
+This function plot distribution of features among target groups, style can be "box", "violin" and "dot".
+
+```{r}
+
+plotFeatureInTask(task,style="box")
+plotFeatureInTask(task,style="violin")
+plotFeatureInTask(task,style="dot")
+
+
+```
+
     
 # Other Features
 

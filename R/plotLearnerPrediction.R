@@ -1,3 +1,32 @@
+#' @export
+#'
+plotLearnerPrediction = function(learner = NULL, task = NULL,  interestedFeatures = NULL, gridsize = 100L,
+                                 prob.alpha = TRUE,
+                                 pointsize = 2, err.size = pointsize, err.col = "white") {
+
+  if (!is.null(learner) & !is.null(task)) {
+    task = assert_task(task, clone = TRUE)
+    learner = assert_learner(learner, task = task, clone = TRUE)
+    if (is.null(interestedFeatures)) {
+      interestedFeatures = head(task$feature_names, 2)
+    }
+  } else {
+    stop(paste0("learner&task should be defined."))
+  }
+  #  checkmate::assertChoice(err.mark, choices = c("train", "cv", "none"))
+
+  #  e=makeExperimentByInterestedFeatures(learner,task,interestedFeatures)
+  subjectData = makeSubjectData(learner,task, interestedFeatures)
+
+  gridData = makeGridData(task, interestedFeatures, gridsize = gridsize)
+  gridData = gridDataPrediction(task, grid = gridData)
+
+  p = plotGridAndSubjectData(subjectData, gridData, interestedFeatures,
+                             prob.alpha = prob.alpha,
+                             pointsize = pointsize, err.size = err.size, err.col = err.col)
+  return(p)
+}
+
 commonValue = function(x) {
   # get median or most common value
   if (class(x) == "numeric" | class(x) == "integer") {
@@ -8,6 +37,20 @@ commonValue = function(x) {
     return(NA)
   }
 }
+
+makeSubjectData = function(learner,task, interestedFeatures) {
+
+  target = task$target_names
+  predictionResult = as.data.table(learner$predict(task))
+  predictionResult$.err = predictionResult$response != predictionResult$truth
+  colnames(predictionResult)[2] = target
+
+  subjectData = task$data()[, interestedFeatures, with = FALSE]
+  subjectData = cbind(subjectData, predictionResult[, -1]) #-1 to remove row_id column
+  return(subjectData)
+
+}
+
 
 makeGridData = function(task, interestedFeatures, gridsize = 100L) {
 
@@ -39,59 +82,27 @@ makeGridData = function(task, interestedFeatures, gridsize = 100L) {
   return(grid)
 }
 
-
 # predictions on grid data
-gridDataPrediction = function(e, gridData) {
-
-  eClone = e$clone()
-  taskClone = e$task$clone()
+gridDataPrediction = function(task, gridData) {
+  taskClone = task$clone()
+  target = taskClone$target_names
   interestedFeatures = head(colnames(gridData)[-ncol(gridData)], 2)
 
-  notInterestedFeatures = setdiff(eClone$task$feature_names, interestedFeatures)
+  notInterestedFeatures = setdiff(taskClone$feature_names, interestedFeatures)
   if (length(notInterestedFeatures) > 0) { # more than two features needed for model in e
-    notInterestedFeaturesValue = eClone$task$data()[, notInterestedFeatures, with = FALSE]
+    notInterestedFeaturesValue = taskClone$data()[, notInterestedFeatures, with = FALSE]
     notInterestedFeaturesValue = rbind(apply(notInterestedFeaturesValue, 2, commonValue))
     row.names(notInterestedFeaturesValue) = NULL
     gridData = cbind(gridData, notInterestedFeaturesValue)
   }
-  gridPredictions = eClone$predict(newdata = gridData)
 
-  target = taskClone$target_names
-  gridData[, target] = gridPredictions$prediction$response
-  gridData = cbind(gridData, .prob.pred.class = apply(gridPredictions$prediction$prob, 1, max))
+  gridPredictions=learner$predict_newdata(taskClone,gridData)
+
+  gridData[, target] = gridPredictions$response
+  gridData = cbind(gridData, .prob.pred.class = apply(gridPredictions$prob, 1, max))
   return(gridData)
 }
 
-makeExperimentByInterestedFeatures = function(learner, task, interestedFeatures) {
-
-  taskClone = task$clone()
-  taskClone$select(interestedFeatures)
-  # prob
-  learnerClone = learner$clone()
-  if ("prob" %in% learner$predict_types) {
-    learnerClone$predict_type = "prob"
-  }
-
-  eClone = Experiment$new(task = taskClone, learner = learnerClone)
-  eClone$train()
-  eClone$predict()
-  return(eClone)
-}
-
-makeSubjectDataByExperiment = function(e, interestedFeatures) {
-
-  eClone = e$clone()
-
-  target = eClone$task$target_names
-  predictionResult = as.data.table(eClone$prediction)
-  predictionResult$.err = predictionResult$response != predictionResult$truth
-  colnames(predictionResult)[2] = target
-
-  subjectData = eClone$task$data()[, interestedFeatures, with = FALSE]
-  subjectData = cbind(subjectData, predictionResult[, -1]) #-1 to remove row_id column
-  return(subjectData)
-
-}
 
 plotGridAndSubjectData = function(subjectData, gridData, interestedFeatures,
   target = setdiff(intersect(colnames(subjectData), colnames(gridData)), interestedFeatures), prob.alpha = TRUE,
@@ -126,41 +137,5 @@ plotGridAndSubjectData = function(subjectData, gridData, interestedFeatures,
     mapping = aes_string(x = interestedFeatures[1], y = interestedFeatures[2], shape = target),  size = err.size, show.legend = FALSE)
   p = p + guides(alpha = FALSE)
 
-  return(p)
-}
-
-
-#' @export
-#'
-plotLearnerPrediction = function(e = NULL, learner = NULL, task = NULL,  interestedFeatures = NULL, gridsize = 100L,
-  prob.alpha = TRUE,
-  pointsize = 2, err.size = pointsize, err.col = "white") {
-
-  if (!is.null(e)) {
-    eClone = e$clone()
-    if (is.null(interestedFeatures)) {
-      interestedFeatures = head(eClone$task$feature_names, 2)
-    }
-  } else if (!is.null(learner) & !is.null(task)) {
-    task = assert_task(task, clone = TRUE)
-    learner = assert_learner(learner, task = task, clone = TRUE)
-    if (is.null(interestedFeatures)) {
-      interestedFeatures = head(task$feature_names, 2)
-    }
-    eClone = makeExperimentByInterestedFeatures(learner, task, interestedFeatures)
-  } else {
-    stop(paste0("At least learner&task or Experiment should be defined."))
-  }
-  #  checkmate::assertChoice(err.mark, choices = c("train", "cv", "none"))
-
-  #  e=makeExperimentByInterestedFeatures(learner,task,interestedFeatures)
-  subjectData = makeSubjectDataByExperiment(eClone, interestedFeatures)
-
-  gridData = makeGridData(eClone$task, interestedFeatures, gridsize = gridsize)
-  gridData = gridDataPrediction(e = eClone, grid = gridData)
-
-  p = plotGridAndSubjectData(subjectData, gridData, interestedFeatures,
-    prob.alpha = prob.alpha,
-    pointsize = pointsize, err.size = err.size, err.col = err.col)
   return(p)
 }

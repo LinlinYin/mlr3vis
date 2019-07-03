@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • mlr3vis</title>
+<title>Show model prediction results diustribution on 2 selected features. — plotLearnerPrediction • mlr3vis</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,7 +30,16 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Show model prediction results diustribution on 2 selected features. — plotLearnerPrediction" />
+
+<meta property="og:description" content="This function need learner and task as input, and will use the orginal model in learner. It is similar as the function
+with same name in mlr but it used orginal model in learner (usually used all features) rather than make
+a new model based on only two selected features. The interestedFeatures were only used for visulization
+purpose as X axis and Y axis. To show the distribution of prediction result or probability, grid with
+different colours were plotted as background. It used orginal model in learner, and interestedFeatures
+among X and Y axis as data. The median values or most common values for Features used in model but not
+in interestedFeatures were used to predict the grid background." />
+<meta name="twitter:card" content="summary" />
 
 
 
@@ -47,7 +56,7 @@
   </head>
 
   <body>
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -101,84 +110,40 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Show model prediction results diustribution on 2 selected features.</h1>
+    
+    <div class="hidden name"><code>plotLearnerPrediction.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    
+    <p>This function need learner and task as input, and will use the orginal model in learner. It is similar as the function
+with same name in mlr but it used orginal model in learner (usually used all features) rather than make
+a new model based on only two selected features. The interestedFeatures were only used for visulization
+purpose as X axis and Y axis. To show the distribution of prediction result or probability, grid with
+different colours were plotted as background. It used orginal model in learner, and interestedFeatures
+among X and Y axis as data. The median values or most common values for Features used in model but not
+in interestedFeatures were used to predict the grid background.</p>
+    
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>plotLearnerPrediction</span>(<span class='kw'>learner</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>task</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>interestedFeatures</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>gridsize</span> <span class='kw'>=</span> <span class='fl'>100L</span>, <span class='kw'>prob.alpha</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>pointsize</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>err.size</span> <span class='kw'>=</span> <span class='no'>pointsize</span>, <span class='kw'>err.col</span> <span class='kw'>=</span> <span class='st'>"white"</span>)</pre>
+        
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      <tr>
-        
-        <td>
-          <p><code><a href="generateThreshVsPerfData.html">generateThreshVsPerfData()</a></code> </p>
-        </td>
-        <td><p>Generate threshold vs. performance(s) for 2-class classification.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="generateThreshVsPerfDataInBenchmark.html">generateThreshVsPerfDataInBenchmark()</a></code> </p>
-        </td>
-        <td><p>Generate threshold vs. performance(s) for 2-class classification in Benchmark object.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="hello.html">hello()</a></code> </p>
-        </td>
-        <td><p>Hello, World!</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="mlr3vis-package.html">mlr3vis-package</a></code> </p>
-        </td>
-        <td><p>mlr3vis: What the Package Does (Title Case)</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plotBMRBoxplots.html">plotBMRBoxplots()</a></code> </p>
-        </td>
-        <td><p>Create box, violin or dot plots for a BenchmarkResult.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plotBMRRanksAsBarChart.html">plotBMRRanksAsBarChart()</a></code> </p>
-        </td>
-        <td><p>Create a bar chart for ranks in a BenchmarkResult.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plotLearnerPrediction.html">plotLearnerPrediction()</a></code> </p>
-        </td>
-        <td><p>Show model prediction results diustribution on 2 selected features.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plotThreshVsPerf.html">plotThreshVsPerf()</a></code> </p>
-        </td>
-        <td><p>Plot threshold vs. performance(s) for 2-class classification using ggplot2.</p></td>
-      </tr>
-    </tbody>
-    </table>
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fl'>1</span></div><div class='output co'>#&gt; [1] 1</div></pre>
   </div>
-
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-all-functions">All functions</a></li>
+            
+      <li><a href="#examples">Examples</a></li>
     </ul>
+
   </div>
 </div>
 

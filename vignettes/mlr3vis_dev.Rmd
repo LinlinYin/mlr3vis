@@ -45,7 +45,11 @@ mlr3: https://mlr3book.mlr-org.com/
 This function need learner and task as input. The goal of this function is to show the priediction results with distribution of interested features. It is similar as the function with same name in mlr but it used orginal model in learner (usually used all features) rather than make a new model based on only two interested features. The interestedFeatures were only used for visulization
 purpose as X axis and Y axis. To show the distribution of prediction result or probability with changes of interested features, grid with different colours were plotted as background. The prediction of grid used orginal model in learner, and interestedFeatures among X and Y axis as data. The median values or most common values for Features used in model but not in interestedFeatures were used to paticipate prediction of the grid background.  
 
-An example listed below. prob.alpha = FALSE shows prediction result, prob.alpha = TRUE shows maximal probability.
+Parameters:  
+* learner: need to be trained and predict_type = "prob"  
+* task: task, no requirement  
+* prob.alpha: FALSE shows prediction result; TRUE shows maximal probability  
+
 
 ```{r}
 
@@ -62,10 +66,11 @@ plotLearnerPrediction(learner=learner,task=task,prob.alpha = TRUE)
 
 ## Combination of plotLearnerPrediction
 
-This is very interesting to how the distribution of prediction result among different combination of features. Here we found that although there were four features in the learner, they have different roles. "Petal.Length" was used to preidcit "setosa"; "Petal.Width" was used to predict "virginica". "Sepal.Width" and "Sepal.Length" didn't contribute in this model.
+It is very interesting to analyze how the distribution of prediction result among different combination of features. Here we found that although there were four features in the learner, they have different roles. "Petal.Length" was used to preidcit "setosa"; "Petal.Width" was used to predict "virginica". "Sepal.Width" and "Sepal.Length" didn't contribute in this model.
 
+**I like this figure (go through all combination of features and see how the preidcition results look like) and going to make this as a function too.**
 
-```{r}
+```{r,fig.width=7,fig.height=9}
 p1=plotLearnerPrediction(learner=learner,task=task,prob.alpha = TRUE, interestedFeatures= c("Sepal.Length","Petal.Length"))
 
 p2=plotLearnerPrediction(learner=learner,task=task,prob.alpha = TRUE, interestedFeatures= c("Sepal.Length","Petal.Width"))
@@ -74,10 +79,17 @@ p3=plotLearnerPrediction(learner=learner,task=task,prob.alpha = TRUE, interested
 
 p4=plotLearnerPrediction(learner=learner,task=task,prob.alpha = TRUE, interestedFeatures= c("Petal.Width","Petal.Length"))
 
-ggarrange(p1,p2,p3,p4,common.legend = TRUE)
+p5=plotLearnerPrediction(learner=learner,task=task,prob.alpha = TRUE, interestedFeatures= c("Petal.Width","Sepal.Width"))
+
+p6=plotLearnerPrediction(learner=learner,task=task,prob.alpha = TRUE, interestedFeatures= c("Petal.Width","Sepal.Length"))
+
+ggarrange(p1,p2,p3,p4,p5,p6,common.legend = TRUE,ncol=2,nrow=3)
 
 
 ```
 
+  
+    
+# Other Features
 
-All introduction for other functions are removed on purpose since I am not sure if they can work with latest version of mlr3 at this time. Will add them back later.
+**All introduction for other functions are removed on purpose since I am not sure if they can work with latest version of mlr3 at this time. Will add them back later.**

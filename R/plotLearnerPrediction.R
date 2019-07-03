@@ -17,8 +17,8 @@
 #' @examples
 #' 1
 plotLearnerPrediction = function(learner = NULL, task = NULL,  interestedFeatures = NULL, gridsize = 100L,
-                                 prob.alpha = TRUE,
-                                 pointsize = 2, err.size = pointsize, err.col = "white") {
+  prob.alpha = TRUE,
+  pointsize = 2, err.size = pointsize, err.col = "white") {
 
   if (!is.null(learner) & !is.null(task)) {
     task = assert_task(task, clone = TRUE)
@@ -32,14 +32,14 @@ plotLearnerPrediction = function(learner = NULL, task = NULL,  interestedFeature
   #  checkmate::assertChoice(err.mark, choices = c("train", "cv", "none"))
 
   #  e=makeExperimentByInterestedFeatures(learner,task,interestedFeatures)
-  subjectData = makeSubjectData(learner,task, interestedFeatures)
+  subjectData = makeSubjectData(learner, task, interestedFeatures)
 
   gridData = makeGridData(task, interestedFeatures, gridsize = gridsize)
   gridData = gridDataPrediction(task, gridData = gridData)
 
   p = plotGridAndSubjectData(subjectData, gridData, interestedFeatures,
-                             prob.alpha = prob.alpha,
-                             pointsize = pointsize, err.size = err.size, err.col = err.col)
+    prob.alpha = prob.alpha,
+    pointsize = pointsize, err.size = err.size, err.col = err.col)
   return(p)
 }
 
@@ -54,7 +54,7 @@ commonValue = function(x) {
   }
 }
 
-makeSubjectData = function(learner,task, interestedFeatures) {
+makeSubjectData = function(learner, task, interestedFeatures) {
 
   target = task$target_names
   predictionResult = as.data.table(learner$predict(task))
@@ -100,6 +100,7 @@ makeGridData = function(task, interestedFeatures, gridsize = 100L) {
 
 # predictions on grid data
 gridDataPrediction = function(task, gridData) {
+
   taskClone = task$clone()
   target = taskClone$target_names
   interestedFeatures = head(colnames(gridData)[-ncol(gridData)], 2)
@@ -112,7 +113,7 @@ gridDataPrediction = function(task, gridData) {
     gridData = cbind(gridData, notInterestedFeaturesValue)
   }
 
-  gridPredictions=learner$predict_newdata(taskClone,newdata=gridData)
+  gridPredictions = learner$predict_newdata(taskClone, newdata = gridData)
 
   gridData[, target] = gridPredictions$response
   gridData = cbind(gridData, .prob.pred.class = apply(gridPredictions$prob, 1, max))

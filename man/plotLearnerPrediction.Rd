@@ -5,8 +5,9 @@
 \title{Show model prediction results diustribution on 2 selected features.}
 \usage{
 plotLearnerPrediction(learner = NULL, task = NULL,
-  interestedFeatures = NULL, gridsize = 100L, prob.alpha = TRUE,
-  pointsize = 2, err.size = pointsize, err.col = "white")
+  interestedFeatures = NULL, otherFeaturesValue = NULL,
+  gridsize = 100L, prob.alpha = TRUE, pointsize = 2,
+  err.size = pointsize, err.col = "white")
 }
 \description{
 This function need learner and task as input, and will use the orginal model in learner. It is similar as the function

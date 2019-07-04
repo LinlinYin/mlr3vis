@@ -16,8 +16,9 @@
 #' @export
 #' @examples
 #' 1
-plotLearnerPrediction = function(learner = NULL, task = NULL,  interestedFeatures = NULL, gridsize = 100L,
-  prob.alpha = TRUE,
+plotLearnerPrediction = function(learner = NULL, task = NULL,  interestedFeatures = NULL,
+                                 otherFeaturesValue=NULL,
+  gridsize = 100L, prob.alpha = TRUE,
   pointsize = 2, err.size = pointsize, err.col = "white") {
 
   if (!is.null(learner) & !is.null(task)) {
@@ -35,7 +36,7 @@ plotLearnerPrediction = function(learner = NULL, task = NULL,  interestedFeature
   subjectData = makeSubjectData(learner, task, interestedFeatures)
 
   gridData = makeGridData(task, interestedFeatures, gridsize = gridsize)
-  gridData = gridDataPrediction(task, gridData = gridData)
+  gridData = gridDataPrediction(task, gridData = gridData,otherFeaturesValue=otherFeaturesValue)
 
   p = plotGridAndSubjectData(subjectData, gridData, interestedFeatures,
     prob.alpha = prob.alpha,
@@ -99,18 +100,24 @@ makeGridData = function(task, interestedFeatures, gridsize = 100L) {
 }
 
 # predictions on grid data
-gridDataPrediction = function(task, gridData) {
+gridDataPrediction = function(task, gridData,otherFeaturesValue) {
 
   taskClone = task$clone()
   target = taskClone$target_names
   interestedFeatures = head(colnames(gridData)[-ncol(gridData)], 2)
 
   notInterestedFeatures = setdiff(taskClone$feature_names, interestedFeatures)
-  if (length(notInterestedFeatures) > 0) { # more than two features needed for model in e
-    notInterestedFeaturesValue = taskClone$data()[, notInterestedFeatures, with = FALSE]
-    notInterestedFeaturesValue = rbind(apply(notInterestedFeaturesValue, 2, commonValue))
-    row.names(notInterestedFeaturesValue) = NULL
-    gridData = cbind(gridData, notInterestedFeaturesValue)
+  if (length(notInterestedFeatures) > 0) { # more than two features needed for model in learner
+    if (!is.null(otherFeaturesValue)) { #defined otherFeaturesValue. Will use it to fill gridData
+      gridData=cbind(gridData,otherFeaturesValue)
+    } else {
+      notInterestedFeaturesValue = taskClone$data()[, notInterestedFeatures, with = FALSE]
+      notInterestedFeaturesValue = rbind(apply(notInterestedFeaturesValue, 2, commonValue))
+      row.names(notInterestedFeaturesValue) = NULL
+      gridData = cbind(gridData, notInterestedFeaturesValue)
+    }
+  } else if (!is.null(otherFeaturesValue)) {
+    warning(paste0("Defined otherFeaturesValue but will not use it as the orginal model only contains two features"))
   }
 
   gridPredictions = learner$predict_newdata(taskClone, newdata = gridData)

@@ -41,7 +41,14 @@ plotLearnerPrediction = function(learner = NULL, task = NULL,  interestedFeature
   p = plotGridAndSubjectData(subjectData, gridData, interestedFeatures,
     prob.alpha = prob.alpha,
     pointsize = pointsize, err.size = err.size, err.col = err.col)
-  return(p)
+
+  figTitle=(setdiff(task$feature_names,interestedFeatures))
+  if (length(figTitle)>0) {
+    figTitle=unlist(gridData[1,figTitle])
+    figTitle=paste(paste0(names(figTitle),"=",figTitle),collapse="; ")
+    p=p+ggtitle(figTitle)
+  }
+  return(plotWithTheme(p))
 }
 
 commonValue = function(x) {

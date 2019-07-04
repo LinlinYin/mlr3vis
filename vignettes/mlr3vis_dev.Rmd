@@ -54,6 +54,17 @@ learner$train(task)
 
 plotLearnerPrediction(learner=learner,task=task,prob.alpha = FALSE)
 plotLearnerPrediction(learner=learner,task=task,prob.alpha = TRUE)
+```
+
+
+## Define otherFeaturesValue for grid prediction in plotLearnerPrediction
+
+As introduced in last section, plotLearnerPrediction used median or most common value for grid prediction if more than the two interested features were used in the model. Here we can define the values as other Features in the model by a list, and the grid prediction will be based on these values. The results will be different (first figure, not defined otherFeaturesValue, use median value; second figure, use defined otherFeaturesValue).
+
+```{r}
+plotLearnerPrediction(learner=learner,task=task,prob.alpha = TRUE,interestedFeatures= c("Petal.Width","Sepal.Length"))
+otherFeaturesValue=list(Petal.Length=2.1,Sepal.Width=3.3)
+plotLearnerPrediction(learner=learner,task=task,prob.alpha = TRUE,interestedFeatures= c("Petal.Width","Sepal.Length"),otherFeaturesValue=otherFeaturesValue)
 
 
 ```
@@ -97,7 +108,7 @@ summaryFeatureInTask(task)
 
 This function visualizes distribution of features among target groups, style can be "pairs", "box", "violin" and "dot". Task will be used as input.
 
-```{r}
+```{r,message=FALSE}
 
 plotFeatureInTask(task,style="pairs")
 plotFeatureInTask(task,style="box")

@@ -106,6 +106,25 @@ plotFeatureInTask(task,style="dot")
 
 ```
 
+
+## Resampling Test
+
+```{r}
+
+resampling = mlr_resamplings$get("cv", param_vals = list(folds = 3L))
+ctrl = mlr_control(store_model= TRUE)
+rr = resample(task, learner, resampling, ctrl = ctrl)
+print(rr)
+
+rr$performance("classif.ce")
+
+
+rr$prediction
+
+```
+
+
+
     
 # Other Features
 

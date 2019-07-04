@@ -19,25 +19,30 @@ summaryFeatureInTask = function(task, printHtml = FALSE) {
 
 #' @export
 #'
-plotFeatureInTask = function(task,  style = "box") {
+plotFeatureInTask = function(task,  style = "pairs") {
 
-  checkmate::assertChoice(style, c("box", "violin", "dot"))
+  checkmate::assertChoice(style, c("pairs","box", "violin", "dot"))
 
 
   target = task$target_names
   allFeatures = task$feature_names
   dataForPlot = task$data()[, c(allFeatures,target), with = FALSE]
-  dataForPlot = melt(dataForPlot, id.vars = c(target))
 
-  p = ggplot(data = dataForPlot, aes_string(x = target, y = "value")) + facet_wrap(~variable, scale = "free") + ylab("Features")
-  if (style == "box") {
-    p = p + geom_boxplot()
-  } else if (style == "violin") {
-    p = p + geom_violin()
+  if (style == "pairs") {
+    GGally::ggpairs(dataForPlot,aes_string(colour=target))
   } else {
-    p = p + geom_dotplot(binaxis = "y", stackdir = "center", position = "dodge", size = 1)
-    #    p = p + geom_jitter()
+    dataForPlot = melt(dataForPlot, id.vars = c(target))
+    p = ggplot(data = dataForPlot, aes_string(x = target, y = "value")) + facet_wrap(~variable, scale = "free") + ylab("Features")
+    if (style == "box") {
+      p = p + geom_boxplot()
+    } else if (style == "violin") {
+      p = p + geom_violin()
+    } else {
+      p = p + geom_dotplot(binaxis = "y", stackdir = "center", position = "dodge", size = 1)
+      #    p = p + geom_jitter()
+    }
   }
+
   return(plotWithTheme(p))
 
 }

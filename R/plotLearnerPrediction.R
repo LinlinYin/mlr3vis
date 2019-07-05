@@ -21,6 +21,12 @@ plotLearnerPrediction = function(learner = NULL, task = NULL,  interestedFeature
   gridsize = 100L, prob.alpha = TRUE,
   pointsize = 2, err.size = pointsize, err.col = "white") {
 
+  if (length(interestedFeatures) > 2) {
+    stop("Only one or two features are supported.")
+  } else if ((length(interestedFeatures) == 1 & task$task_type == "classif")) {
+    stop("Only two features are supported for classif task.")
+  }
+
   if (!is.null(learner) & !is.null(task)) {
     task = assert_task(task, clone = TRUE)
     learner = assert_learner(learner, task = task, clone = TRUE)
@@ -66,7 +72,14 @@ makeSubjectData = function(learner, task, interestedFeatures) {
 
   target = task$target_names
   predictionResult = as.data.table(learner$predict(task))
-  predictionResult$.err = predictionResult$response != predictionResult$truth
+  if (task$task_type == "regr") {
+    predictionResult$.err = predictionResult$response - predictionResult$truth
+  } else if (task$task_type == "classif") {
+    predictionResult$.err = predictionResult$response != predictionResult$truth
+  } else {
+    stop("Current only support regr or classif task type")
+  }
+
   colnames(predictionResult)[2] = target
 
   subjectData = task$data()[, interestedFeatures, with = FALSE]
@@ -100,7 +113,14 @@ makeGridData = function(task, interestedFeatures, gridsize = 100L) {
   colnames(grid) = interestedFeatures
 
   # need task target for truth
-  grid = cbind(grid, levels(task$truth())[1])
+  # if (task$task_type=="regr") {
+  #   grid = cbind(grid, levels(task$truth())[1])
+  # } else if (task$task_type=="classif") {
+  #   grid = cbind(grid, task$truth()[1])
+  # } else {
+  #   stop("Current only support regr or classif task type")
+  # }
+  grid = cbind(grid, task$truth()[1])
   colnames(grid)[ncol(grid)] = target
 
   return(grid)

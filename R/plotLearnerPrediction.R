@@ -17,7 +17,7 @@
 #' @examples
 #' 1
 plotLearnerPrediction = function(learner = NULL, task = NULL,  interestedFeatures = NULL,
-                                 otherFeaturesValue=NULL,
+  otherFeaturesValue = NULL,
   gridsize = 100L, prob.alpha = TRUE,
   pointsize = 2, err.size = pointsize, err.col = "white") {
 
@@ -36,17 +36,17 @@ plotLearnerPrediction = function(learner = NULL, task = NULL,  interestedFeature
   subjectData = makeSubjectData(learner, task, interestedFeatures)
 
   gridData = makeGridData(task, interestedFeatures, gridsize = gridsize)
-  gridData = gridDataPrediction(task, gridData = gridData,otherFeaturesValue=otherFeaturesValue)
+  gridData = gridDataPrediction(task, gridData = gridData, otherFeaturesValue = otherFeaturesValue)
 
   p = plotGridAndSubjectData(subjectData, gridData, interestedFeatures,
     prob.alpha = prob.alpha,
     pointsize = pointsize, err.size = err.size, err.col = err.col)
 
-  figTitle=(setdiff(task$feature_names,interestedFeatures))
-  if (length(figTitle)>0) {
-    figTitle=unlist(gridData[1,figTitle])
-    figTitle=paste(paste0(names(figTitle),"=",figTitle),collapse="; ")
-    p=p+ggtitle(figTitle)
+  figTitle = (setdiff(task$feature_names, interestedFeatures))
+  if (length(figTitle) > 0) {
+    figTitle = unlist(gridData[1, figTitle])
+    figTitle = paste(paste0(names(figTitle), "=", figTitle), collapse = "; ")
+    p = p + ggtitle(figTitle)
   }
   return(plotWithTheme(p))
 }
@@ -107,7 +107,7 @@ makeGridData = function(task, interestedFeatures, gridsize = 100L) {
 }
 
 # predictions on grid data
-gridDataPrediction = function(task, gridData,otherFeaturesValue) {
+gridDataPrediction = function(task, gridData, otherFeaturesValue) {
 
   taskClone = task$clone()
   target = taskClone$target_names
@@ -115,8 +115,8 @@ gridDataPrediction = function(task, gridData,otherFeaturesValue) {
 
   notInterestedFeatures = setdiff(taskClone$feature_names, interestedFeatures)
   if (length(notInterestedFeatures) > 0) { # more than two features needed for model in learner
-    if (!is.null(otherFeaturesValue)) { #defined otherFeaturesValue. Will use it to fill gridData
-      gridData=cbind(gridData,otherFeaturesValue)
+    if (!is.null(otherFeaturesValue)) { # defined otherFeaturesValue. Will use it to fill gridData
+      gridData = cbind(gridData, otherFeaturesValue)
     } else {
       notInterestedFeaturesValue = taskClone$data()[, notInterestedFeatures, with = FALSE]
       notInterestedFeaturesValue = rbind(apply(notInterestedFeaturesValue, 2, commonValue))

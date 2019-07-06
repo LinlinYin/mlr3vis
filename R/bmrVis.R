@@ -77,19 +77,19 @@ plotBMRBoxplots = function(bmr, style = "box", xVar = "learner_id", facet_x = "t
 #' @export
 #' @examples
 #' 1
-plotBMRRanksAsBarChart = function(bmr, pos = "tile") {
+plotBMRRanksAsBarChart = function(bmr, measures,rankByMeasure=names(measures)[1],pos = "tile") {
   checkmate::assertChoice(pos, c("tile", "stack", "dodge"))
 
-  bmrAgg = bmr$aggregated(objects = FALSE)
+  bmrAgg = bmr$aggregate(measures)
   dataForPlot = bmrAgg %>%
     group_by(task_id) %>%
-    mutate(rank = min_rank(desc(classif.acc)))
-  p = ggplot(dataForPlot, aes(x = rank, y = task_id, fill = learner_id))
+    mutate(rank = rank(!!sym(rankByMeasure)))
+#  p = ggplot(dataForPlot, aes(x = rank, y = task_id, fill = learner_id))
   if (pos == "tile") {
-    p = ggplot(dataForPlot, aes(x = rank, y = task_id, fill = learner_id))
+    p = ggplot(dataForPlot, aes(x = learner_id, y = task_id, fill = rank))
     p = p + geom_tile()
-  } else if (pos == "dodge") {
-    p = ggplot(dataForPlot, aes_string("rank", fill = "learner_id"))
+  } else if (pos == "dodge" | pos == "stack") {
+    p = ggplot(dataForPlot, aes(rank, fill = learner_id))
     p = p + geom_bar(position = pos)
   }
   return(plotWithTheme(p))
